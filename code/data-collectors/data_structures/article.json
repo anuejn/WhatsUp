@@ -1,0 +1,12 @@
+{
+  "title": "required",
+  "subtitle": "optional",
+  "text": "required",
+
+  "meta": {
+    "author": "optional",
+    "category": "optional",
+    "timestamp": "optional",
+    "url": "optional"
+  }
+}

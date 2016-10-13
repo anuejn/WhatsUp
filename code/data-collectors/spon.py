@@ -17,7 +17,8 @@ spon = db.spon
 # parse the feed
 last_updated = 0
 while True:
-    feed = feedparser.parse("newsfeed.zeit.de/index")
+    feed = feedparser.parse("www.spiegel.de/index.rss")
+    print(feed)
     utime = time.mktime(feed["feed"]["updated_parsed"])
     if utime > last_updated:
         print("news!")
