@@ -1,11 +1,13 @@
 {
   "title": "required",
   "subtitle": "optional",
-  "text": "required",
+  "summary": "optional",
+  "text": "optional",
 
   "meta": {
+    "source": "required",
     "author": "optional",
-    "category": "optional",
+    "tags": "optional",
     "timestamp": "optional",
     "url": "optional"
   }
