@@ -2,7 +2,11 @@
 title: Was ist Los?
 subtitle: Erhebung und Visualisierung von empierischen Daten verschiedener Internet-Zeitungen
 author:
-- Jaro Habiger
-lang: asdf
+- Halbjahresarbeit 2016/2107 von *Jaro Habiger*
+
+documentclass: paper
+lang: ngerman
 bablel-lang: ngerman
+fontsize: 12pt
+papersize: a4paper
 ---
