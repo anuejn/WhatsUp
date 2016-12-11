@@ -1,31 +1,32 @@
-const electron = require('electron');
-const {app} = electron;
-const {BrowserWindow} = electron;
-
-let win;
-
-function createWindow() {
-    win = new BrowserWindow({width: 1280, height: 780, show: false});
-    win.setMenu(null);
-    win.loadURL(`file://${__dirname}/ui/index.html`);
-
-    win.on('closed', () => {
-        win = null;
+$(() => {
+    //initialize the connection
+    $.couch.urlPrefix = "http://admin:cOuChDb!1!@neindev.tk:5984";
+    $.couch.login({
+        name: "admin",
+        password: "cOuChDb!1!",
+        success: function(data) {
+            console.log(data);
+            console.log($.couch.session())
+        },
+        error: function(status) {
+            console.log(status);
+        }
     });
 
-    win.once('ready-to-show', () => {
-        win.show()
-    })
-}
+    var db = $.couch.db("news");
 
-app.on('ready', createWindow);
+    //do a test query
+    var mapFunction = function (doc) {
+        emit();
+    };
 
-app.on('window-all-closed', () => {
-    app.quit();
-});
-
-app.on('activate', () => {
-    if(win === null) {
-        createWindow();
-    }
+    db.query(mapFunction, "_count", "javascript", {
+        success: function (data) {
+            console.log(data);
+        },
+        error: function (status) {
+            console.log(status);
+        },
+        reduce: false
+    });
 });
