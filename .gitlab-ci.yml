@@ -13,4 +13,4 @@ before_script:
 scaleway:
   stage: deploy
   script:
-    - rsync -avh -e --delete code root@neindev.tk:~/
+    - rsync -avh -e --delete ssh code/ root@neindev.tk:~/
