@@ -4,9 +4,9 @@ stages:
   - deploy
 
 before_script:
-  - apt-get update -y && apt-get install openssh-client -y
+  - apt-get update -y && apt-get install openssh-client -y > /dev/null
   - eval $(ssh-agent -s)
-  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - ssh-add <(echo "$SCALEWAY_KEY")
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
