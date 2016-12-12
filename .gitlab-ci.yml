@@ -1,0 +1,16 @@
+image: debian
+
+stages:
+  - deploy
+
+before_script:
+  - apt-get update -y && apt-get install openssh-client -y
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+scaleway:
+  - stage: deploy
+  - script:
+    - rsync -avh -e --delete code root@neindev.tk:~/
