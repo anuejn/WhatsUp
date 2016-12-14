@@ -1,4 +1,4 @@
-import couchdb
+import mongo
 from flask import Flask, request, jsonify, abort
 
 # init the couchdb connection
@@ -27,4 +27,4 @@ def wrap():
 
 # run the flask server
 if __name__ == "__main__":
-    app.run("0.0.0.0", 3141)
+    app.run("localhost", 3141)

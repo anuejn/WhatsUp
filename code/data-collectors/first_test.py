@@ -1,22 +1,18 @@
 import time
 import re
-from builtins import map
 
-import couchdb
+from pymongo import MongoClient
 import feedparser
 
 
-def push_article(db, article):
-    try:
-        db.save(article)
-        print(article)
-    except couchdb.http.ResourceConflict:
-        pass  # article already in db
+def push_article(collection, article):
+    if not collection.find_one(article):
+        collection.insert_one(article)
 
 
 # initialize the database connection
-server = couchdb.Server('http://admin:cOuChDb!1!@neindev.tk:5984/')
-db = server["news"]
+client = MongoClient(host="mongodb")  # use default connection settings for now
+collection = client.whatsup.news
 
 # parse the feed
 last_updated = 0
@@ -39,7 +35,7 @@ while True:
                 },
                 "_id": raw_article["link"]
             }
-            push_article(db, article)
+            push_article(collection, article)
 
         last_updated = utime
 

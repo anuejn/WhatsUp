@@ -1,6 +1,9 @@
-FROM debian:latest
-RUN apt-get -y update && apt-get install -y python3 python3-pip
-COPY . root/
-RUN pip3 install -r root/requirements.txt
+FROM python:3
 
-CMD ["python3", "root/src/zeit.py"]
+COPY requirements.txt /code/
+WORKDIR /code
+RUN pip install -r requirements.txt
+
+COPY . /code
+
+CMD ["python", "first_test.py"]

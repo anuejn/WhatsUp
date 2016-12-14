@@ -1,2 +1,2 @@
-# Backend
-This is the Backend. It collects data from different news sites and adds it to the DB.
+# Data collectors
+This directory contains the data collectors. They collect data from different news sites and add it to the DB.

@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  data-collectors:
+    build: data-collectors/
+    links:
+      - mongodb
+  backend:
+    build: backend/
+    links:
+      - mongodb
+    ports:
+      - "80:80"
+
+  mongodb:
+    image: "mongo:latest"
+    # the below is only for debugging
+    ports:
+      - "27018:27017"
