@@ -1,21 +1,21 @@
 import time
 import re
 
-import couchdb
+from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 import feedparser
 
 
-def push_article(db, article):
-    try:
-        db.save(article)
-        print(article)
-    except couchdb.http.ResourceConflict:
-        pass  # article already in db
+def push_article(collection, article):
+        try:
+            collection.insert_one(article)
+        except DuplicateKeyError:
+            pass  # article is already in db
 
 
 # initialize the database connection
-server = couchdb.Server('http://admin:cOuChDb!1!@neindev.tk:5984/')
-db = server["news"]
+client = MongoClient(host="mongodb")  # use default connection settings for now
+collection = client.whatsup.news
 
 # parse the feed
 last_updated = 0
@@ -38,7 +38,7 @@ while True:
                 },
                 "_id": raw_article["link"]
             }
-            push_article(db, article)
+            push_article(collection, article)
 
         last_updated = utime
 

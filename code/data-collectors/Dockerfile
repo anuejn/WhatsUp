@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 
 COPY . /code
 
-CMD ["python", "first_test.py"]
+CMD ["python", "zeit.py"]
