@@ -5,6 +5,7 @@ stages:
   - deploy
 
 before_script:
+  - apt-get update -y && apt-get install ssh-agent
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SCALEWAY_KEY")
   - mkdir -p ~/.ssh

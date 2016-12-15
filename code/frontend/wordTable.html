@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Visualizer | Word Table</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/mongo_query.js"></script>
+</head>
+
+<body>
+    <main id="out">
+        <!--the actual content goes here -->
+        <script>
+            function map() {
+                var words = this.summary.split(" ");
+                for (var i = 0; i < words.length; i++) {
+                    emit(words[i], 1);
+                }
+            }
+
+            function reduce(key, values) {
+                var total = 0;
+                for (var i = 0; i < values.length; i++) {
+                    total += values[i];
+                }
+                return total;
+            }
+
+            function render(obj) {
+                var table = "<table>";
+                table += "<tr><td>key</td><td>value</td></tr>";
+                obj.forEach(elm => {
+                    table += "<tr><td>" + elm["_id"] + "</td><td>" + elm["value"] + "</td></tr>";
+                });
+                table += "</table>";
+
+                document.getElementById("out").innerHTML = table;
+            }
+
+            mongo_query(map, reduce, render);
+        </script>
+    </main>
+</body>
+
+</html>

@@ -9,11 +9,13 @@ services:
     build: backend/
     links:
       - mongodb
+
+  frontend:
+    build: frontend/
+    links:
+      - backend
     ports:
-      - "8080:80"
+      - "80:80"
 
   mongodb:
     image: "mongo:latest"
-    # the below is only for debugging
-    ports:
-      - "27018:27017"

@@ -9,12 +9,13 @@ import feedparser
 def push_article(collection, article):
         try:
             collection.insert_one(article)
+            print("add %s" % article["_id"])
         except DuplicateKeyError:
             pass  # article is already in db
 
 
 # initialize the database connection
-client = MongoClient(host="mongodb")  # use default connection settings for now
+client = MongoClient(host="mongodb")
 collection = client.whatsup.news
 
 # parse the feed
