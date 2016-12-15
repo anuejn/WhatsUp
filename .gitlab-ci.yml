@@ -1,11 +1,10 @@
-image: debian
+image: docker
 
 stages:
   - build
   - deploy
 
 before_script:
-  - apt-get update -y > /dev/null && apt-get install doker docker-compose docker-machine
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SCALEWAY_KEY")
   - mkdir -p ~/.ssh
