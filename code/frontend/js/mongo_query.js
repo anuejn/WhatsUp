@@ -2,7 +2,9 @@
  * Created by jaro on 13.11.16.
  */
 
-function mongo_query(map, reduce, callback) {
+function mongo_query(map, reduce, callback, host) {
+    host = host ? host : "";
+
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -10,7 +12,7 @@ function mongo_query(map, reduce, callback) {
         }
     };
 
-    var requestUrl = "/api";
+    var requestUrl = host + "/api";
     requestUrl += "?map=" + encodeURIComponent(map.toString());
     requestUrl += "&reduce=" + encodeURIComponent(reduce.toString());
 
@@ -29,3 +31,5 @@ function example_reduce(key, values) {
     }
     return total;
 }
+
+var count = example_reduce;

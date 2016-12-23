@@ -22,9 +22,7 @@ def wrap():
     reduce_function = str(reduce_function)
 
     result = list(collection.map_reduce(Code(map_function), Code(reduce_function), "myresults").find())
-
-    result.sort(key=lambda doc: doc["value"], reverse=True)
-
+    
     return jsonify(result)
 
 

@@ -4,6 +4,7 @@ import re
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 import feedparser
+from pyquery import PyQuery as pq
 
 
 def push_article(collection, article):
@@ -29,6 +30,7 @@ while True:
             article = {
                 "title": raw_article["title"],
                 "summary": re.sub("<[\s\S]*>", "", raw_article["summary"]),
+                "text": pq(url=raw_article["link"])(".paragraph").text(),
 
                 "meta": {
                     "source": "zeit",

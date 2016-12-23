@@ -28,7 +28,7 @@
 
             function render(obj) {
                 obj = obj.filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0).sort((a,b) => b["value"] - a["value"]);
-                // word_merge(obj);
+                word_merge(obj);
 
                 var table = "<h1>Most often used words:</h1>" +
                 "<table style='margin: auto;'>";
@@ -44,7 +44,8 @@
             }
 
             var data = [];
-            mongo_query(map, count, render, "http://metamax.tk");
+            // mongo_query(map, count, render, "http://metamax.tk");
+            data = 
         </script>
 
         <!-- first place a loading animation here -->
