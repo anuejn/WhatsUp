@@ -1,8 +1,8 @@
 # Idee
-Am Anfang dieser Halbjahresarbeit stand die Idee, die aktuelle Nachrichtenlage einfach sichtbar zu machen.
+Am Anfang dieser Halbjahresarbeit stand die Idee, die aktuelle Nachrichtenlage einfach sichtbar zu machen. Dies sollte möglichst intuitiv und aufschlussreich sein. Außerdem 
 
 # Umsezung
-Die Umsetzung lässt sich sehr gut in einzelne teilprobleme Unterteilen. Hierbei ist es am einfachsten, den Datenfluss von den Verschiedenen Nachrichtenquellen zur fertigen Visualisierung zu betrachten. In den nachfolgenden Abschnitten wird dieser Verarbeitungsprozess beschrieben.
+Die Umsetzung lässt sich sehr gut in einzelne teilprobleme Unterteilen, was ich bei meiner umsetzung auch sehr strikt beachtet habe. Hierbei ist es am einfachsten, den Datenfluss von den Verschiedenen Nachrichtenquellen zur fertigen Visualisierung zu betrachten. In den nachfolgenden Abschnitten wird dieser Verarbeitungsprozess beschrieben.
 
 ## Daten Sammeln
 Als erstes müssen Daten zur weiteren Verwertung von den Verschiedenen Nachrichtenquelln Gesammelt werden. Dies geschieht über die sogenannten "RSS-Feeds". Bei diesen handelt es sich um ein standartiesiertes Format, über das Nachrichtenanbieter ihre Artikel, inklusive Metadaten wie z.B. den Zeitpunkt der Veröffentlichung, in maschienenlesabrer Form bereitstellen. Im Prinzip werden also die Gleichen Daten bereitgestellt, wie auf der normalen Internetseite, mit dem Unterschied, das sie einfacher mit Programmen verarbeitbar sind.
@@ -28,7 +28,7 @@ Die nun gesammelten Daten müssen vor der weiteren verwendung ersteinmal struktu
 ## map/reduce
 Das map/reduce Verfahren hat einige große stärken, wie z.B. die hohe paralelisierbarkeit und die damit verbundene hohe geschwindigkeit, bei gleichzeitig hoher flexibilität. MapReduce ist ein von der firma Google eingeführtes Programmiermodell, welches wie folgt funktioniert:
 
-![Der map/reduce prozess als Grafik](img/MapReduce)
+![Der map/reduce prozess als Grafik](img/MapReduce.png)
 
 1. Am Anfang des Przesses steht eine Menge aus N Eingangsdatensätzen. In meinem Fall sind das die Zeitungsartike, die als Objekte mit der oben beschriebenen Datenstruktur vorliegen. Für jeden dieser Artikel wird jetzt die map funktion ausgeführt. Diese ordnet jedem Artikel N Schlüssel-Wert Paare zu. In dem Fall, das wir die zu jedem vorkommenden Wort die Häufigkeit bestimmen wollen, wordnet die map Funktion also jedem Artikel die Menge der Darin enthaltenen Wörter zu. Da diese Funktion auf jeden Artikel andgewnd wird, kann man sich in diesem Fall den gesammten map Prozess als eine Funktion vorstellen, in die die die Menge aller Artikel der Menge der darin enthaltenen Worte zuordnet. Der hierzu zugerhöige Code der map funktion ist:
 ```
@@ -64,37 +64,32 @@ function filter(data) {
     return data.filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
 }
 ```
+Des weiteren wird in diesem schritt versucht, Wörter mit dem gleichen Stamm, und somit mit der gleichen Bedeutung zusammenzuführen, auch wenn diese unterschiedliche endungen Haben. Ein beispiel hierfür ist, das die Wörter "Trump" und "Trumps" zusammengezählt werden. Hierbei wird immer das Kürzeste der Worte behalten, da dies meist die Grundform ist.
 
 ## Datenbank
-Nachdem klar war, wie die Abfragen formuliert werden sollten, habe ich verschiedene Datenbanken in betracht gezogen. Zuerst habe ich angefangen mit der Datenbank "MongoDB" zu arbeite, störte mich aber shr stark an der Komplexität von dieser. Außerdem bietet MongoDB keine möglichkeit, diese über das HTTP Protokoll anzusprechen, was für die Visualisierung allerdings sehr wichtig ist.
+Nachdem klar war, wie die Abfragen formuliert werden sollten, habe ich verschiedene Datenbanken in betracht gezogen. Zuerst habe ich angefangen mit der Datenbank "MongoDB" zu arbeite, störte mich aber shr stark an der Komplexität von dieser. Außerdem bietet MongoDB keine möglichkeit, diese über das HTTP Protokoll anzusprechen, was für die Visualisierung allerdings sehr wichtig ist. Also sah ich mich nach anderen Alternativen um und fand "CouchDB", welche vom Apache Projekt entwicket wird. Diese erfüllte die meisten meiner anforderungen relativ gut, weshalbi ich meinen gesammten bis dahin existierenden Code an CoucDB anpasste. Nach einiger Zeit des Testens stellte sich allerdings heraus, das CouchDB wahrchienlich zu langsam sein würde und ein unpassendes Rechteverwaltungssystem mitbringt, was die Arbeitsersparniss im gegensatz zu MongoDB zu nichte machen würde. In Folge dieser Erkentniss entschied ich mich dazu, meine Software zurück auf MongoDB zu portieren und für diese Eine HTTP schnitschtelle zu schreiben. 
 
-# Stichpunkte
-* Docker!!!1!
-  * build + tests
-* Klare Unterteilung:
-  * Datensammler
-    * In Python geschrieben
-    * Crawlen hauptsächlich rss-feeds
-  * MongoDB
-    * noSQL-Datenbank
-    * Map/Reduce-Querys
-    * zuerst Mongo, dann Couch, dann Mongo
-  * Http Middleware
-    * stellt MongoDB über HTTP bereit
-    * Clinets können eigene Map/Reduce Anfragen an die Datenbank stellen
-      * - langsam
-      * + flexibel
-      * -> kleine datenmengen, daher ok
-  * Frontend
-    * 3d.js visualisierung
-    * einfache API zur DB
-    * einfache umstrukturierbarkeit
+## Middleware
+Diese HTPP API ist in gewissermaßen das Bindeglied zwischen der Datenbank und der Visualisierung, weshalb es im nacholgenden "Middleware" genannt wird. Sie nimmt HTTP anfragen vom Frontend entgegen, leitet diese an die Datenbank weiter und schickt die Antwort an das Frontend zurück. In sofern könnte man sie auch als übersetzer zwischen verschiedenen Protokollen verstehen. Diese ist notwendig, da ich die Visualisierung im Browser implementieren möchte und im Browser nur sehr wenige
+Protokolle verfügbar sind. HTTP ist eines dieser wenigen Möglichkeiten und bietet scih an, da es verhältnissmäßig einfach zu implementieren ist.  
 
-## Vorgehen
-## Probleme
-## Leztendliche Umsetzung
+## Visualisierung
+Ich habe mich entschieden die Visualisierung im Browser zu schreiben. Dies 
+
+* d3.js
+* Flexibel
+
+## Zusammenführung 
+Um die einzelen Teilkomponenten oder auch "Microservices" zusammenzuführen habe ich DOcker verwendet. 
+
+* Mehr details
 
 # Beobachtungen
 ## Evaluation des Verfahrens
+### Ergebniss
+### Technisch
+
+* Map/Reduce bei jedem Query skaliert nicht :(
+
 ## Verschiedene Zeitungen im Vergleich
 # Fazit
