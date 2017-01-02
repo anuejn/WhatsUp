@@ -1,6 +1,6 @@
 ---
 title: Was ist Los?
-subtitle: Erhebung und Visualisierung von empierischen Daten verschiedener Internet-Zeitungen
+subtitle: Erhebung und Visualisierung von empirischen Daten verschiedener Internet-Zeitungen
 author:
 - Halbjahresarbeit 2016/2107 von *Jaro Habiger*
 
