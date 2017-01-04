@@ -6,7 +6,7 @@ print: pdf
 	lpr main.pdf -o outputorder=reverse
 
 pdf:
-	pandoc --smart --toc -N --template=template.tex *.md -o main.pdf
+	pandoc --smart --toc -N --listings --template=template.tex --latex-engine=xelatex *.md -o main.pdf
 
 tex:
-	pandoc --smart --toc -N --template=template.tex *.md -o main.tex
+	pandoc --smart --toc -N --listings --template=template.tex *.md -o main.tex
