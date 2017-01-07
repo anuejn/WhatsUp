@@ -16,6 +16,8 @@ def get_articles(last_updated):
         raw_articles = feed["entries"]
         for raw_article in raw_articles:
             page = pq(url=raw_article["link"])
+            if page(".obfuscated").text():  # fuck spiegel plus
+                continue
             article = {
                 "title": raw_article["title"],
                 "summary": re.sub("<[\s\S]*>", "", raw_article["summary"]),

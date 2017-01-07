@@ -632,6 +632,8 @@ var german_stopwords = [
     "sieben",
     "acht",
     "neun",
+    "zehn",
+    "wollen",
 
     "erste",
     "zweite",
@@ -658,10 +660,13 @@ var german_stopwords = [
     "lassen",
     "gut",
     "de",
+    "zunächst"
 ];
 
 german_stopwords_case = [
-    "ZEIT"
+    "ZEIT",
+    "SPIEGEL",
+    "ONLINE"
 ];
 
 var stopwords = german_stopwords;

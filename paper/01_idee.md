@@ -1,27 +1,28 @@
 # Idee
 * ich -> Programmieren
-* ich -> Zeitung -> klo -> spiegel -> wortwolke
 * ich -> politisch
   * eig TR website
+* ich -> Zeitung -> klo -> spiegel -> wortwolke
 * wie funktionieren Zeitungen?
 * anschpruchsvoll
 * -> was denken medien
 * anwendungsmöglichkeinten
 
-Relativ schnell war mir klar, das ich mich mit Datenvisualisierung beschäftigen will. Anfangs war allerdings nicht ganz klar, welchen Datensatz ich auf welche Aspekte hin untersuchen will. Eines tages nahm ich dann eine Ausgabe des Spiegels zur Hand und sah auf der ersten seite eine sogenannte Wortwolke. Diese form der Darstellungy
+In meiner Freizeit programmiere ich gerne. Ich mag es, Probleme mit Computern oder anderen technischen Geräten zu lösen. Auch gewinne ich hierbei oft neue Erkenntnisse, da man sich beim Programmieren unkonventionell mit den Dingen beschäftigen muss: Man muss mehr in Strukturen denken, muss versuchen einem Computer, der kein Verständnis von Sinn oder Inhalt hat, das Problem nur in logischen Zusammenhängen zu beschreiben. Somit kann mithilfe eines Computerprogramms fast nie eine wirkliche Lösung für ein Problem oder eine Antwort auf eine Frage gefunden werden, allerdings können Computer einem Menschen helfen, eine bestimmte Aufgabe besser, schneller oder einfacher zu erledigen.
+
+Besonders interessant finde ich es immer dann, diese Macht, die wir uns mit der Programmierung von Computern geben können, zu verwenden, wenn wir sie nutzen um neue Einblicke in unsere Umwelt zu erlangen. Auch hier gilt zwar wieder, dass der Computer eigentlich viel dümmer als wir ist, und keine Zusammenhänge begreifen kann, allerdings stumpfe Aufgaben viel schneller und ausdauernder zu erledigen vermag. Diese Kombination aus Eigenschaften ermöglicht es, große Datensätze mit mathematischen Methoden zu analysieren und die Ergebnisse für Menschen ansprechend aufzubereiten. Bei dieser Aufbereitung bietet sich eine optische Darstellung an, da die Augen des Menschen das Sinnesorgan sind, das am schnellsten Daten erfassen kann [spiegelminig]. Es bietet sich also an, empirische Daten grafisch aufzubereiten, sprich Datenvisualisierung zu betreiben.
+
+Relativ schnell war mir also klar, das ich mich mit Datenvisualisierung beschäftigen will. Anfangs war allerdings nicht ganz klar, welchen Datensatz ich auf welche Aspekte hin untersuchen will. Eines Tages nahm ich dann eine Ausgabe des Spiegels zur Hand und sah auf der ersten Seite eine sogenannte Wortwolke. Diese Form der Darstellung fand ich sofort sehr ansprechend.
+
+\iffalse
 
 Am Anfang dieser Halbjahresarbeit stand die Idee, die aktuelle Nachrichtenlage visuell sichtbar zu machen. Dies sollte möglichst intuitiv und aufschlussreich sein. Außerdem
 
-# 1 Tasse Tee
-
-Da nun die Daten fertig live in eine Datenbank "fließen" kann der Interessante teil beginnen: Die Visualisierung und Auswertung. Hierbei können verschiedenen Analysen vorgenommen werden. All diese sind nicht trivial, da immer versucht erden muss aus einem Feließtext, also einem Format, mit dem Computer eigentlich nichts anfangen können Informationen zu gewinnen und zu veranschaulichen. Hierbei ist eine besondere Herausforderung, dass dies alles passieren muss, obwohl der Computer eigentlich über kein versändniss von "Sinn" verfügt. Aus diesem Grund müssen statistische Verfahren als Hilfsmittel zur Hand gezogen werden, die es dem Menschen, der die Daten letztenendes interpretiert ermöglichen Informationen aus der Datenmenge zu ziehen.
-
-* Generelle Gedanken
-* Vortrag über spon
-* Teilweise sehr schwierig zu verstehen -> Datenstrukturen ineinander umwandeln: wenig greifbar
+Hierbei können verschiedenen Analysen vorgenommen werden. All diese sind nicht trivial, da immer versucht erden muss aus einem Feließtext, also einem Format, mit dem Computer eigentlich nichts anfangen können Informationen zu gewinnen und zu veranschaulichen. Hierbei ist eine besondere Herausforderung, dass dies alles passieren muss, obwohl der Computer eigentlich über kein versändniss von "Sinn" verfügt. Aus diesem Grund müssen statistische Verfahren als Hilfsmittel zur Hand gezogen werden, die es dem Menschen, der die Daten letztenendes interpretiert ermöglichen Informationen aus der Datenmenge zu ziehen.
+\fi
 
 # Die Auswahl der Zeitungen
-
+\iffalse
 1. Spiegel.de
 2. Bild.de
 3. Focus.de
@@ -60,5 +61,15 @@ Unique User	November vs. Oktober
 25	Badische Zeitung Online	1,30	0,00	0,0%
 
 http://meedia.de/2015/01/29/agof-news-top-50-n24-zahlen-explodieren-auch-manager-magazin-und-taz-mit-riesen-plus/
+\fi
 
 ## Ein Wort über Bild.de
+
+# Konzeptioneller Aufbau
+
+![Der Aufbau des Gesamtsystems](img/aufbau.png){#fig:aufbau}
+
+Nun gilt es sich ein System auszudenken, welches die Daten der Ausgewählten Zeitungen periodisch herunterlädt und die gesammelten Ergebnisse für spätere Analyse abspeichert. Dieser schritt ist ein sehr wichtiger, der gut bedacht sein muss, da
+\todo{more}
+
+Dieses System sieht am Ende aus wie in Abb. @fig:aufbau.

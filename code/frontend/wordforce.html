@@ -16,6 +16,8 @@
 
         text {
             text-anchor: middle;
+            font-family: Serif;
+            text-shadow: 0 0 15px #fff;
         }
     </style>
     <script src="js/mongo_query.js"></script>
@@ -24,7 +26,7 @@
     <script type="text/javascript" src="js/vivagraph.min.js"></script>
 
     <script>
-        var host = "http://metamax.tk";
+        var host = "";
 
         words = [];
         links = [];
@@ -41,25 +43,25 @@
             };
             mongo_query(map, count, firstStage, host);
         }
-        function firstStage(words) {
+        function firstStage(inWords) {
             words = word_merge(
-                obj
+                inWords
                     .filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
                     .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
                     .sort((a,b) => b["value"] - a["value"])
-                    .slice(0, 10)
+                    .slice(0, 250)
             ).sort((a,b) => b["value"] - a["value"]);
 
             var map = function() {
-                var givenWords = "__marker__";
-                var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
+                var givenWords = __marker__;
+                var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ").filter(w => w);
 
                 // create dict with {"word": ['o', 'c', 'c', 'u', 'r', 'e', 'n', 'c', 'e']}
                 var wordOccurrences = {};
                 givenWords.forEach(word => {
                     var occurrences = [];
                     for(var i = 0; i < words.length; i++) {
-                        if(word = words[i]) {
+                        if(word == words[i]) {
                             occurrences.push(i);
                         }
                     }
@@ -67,27 +69,37 @@
                 });
 
                 givenWords.forEach(w => {
-                    givenWords.forEach(v => { // every word combination is covered as i and j
-                        if(w != v) {
+                    givenWords.forEach(v => { // every word combination is covered as w and v
+                        if(w != v && wordOccurrences[w] && wordOccurrences[v]) {
                             list = [];
                             wordOccurrences[w].forEach(n => {
                                 wordOccurrences[v].forEach(m => {
-                                    list.push(1.0 / Math.abs(n - m));
+                                    list.push(1.0 / Math.pow(Math.abs(n - m), 3));
                                 });
                             });
 
-                            arr = [w, v].sort();
-                            emit(arr[0] + "." + arr[1], list.reduce((a, b) => a + b))
+                            strength = list.reduce((a, b) => a + b, 0);
+                            if(strength != 0) {
+                                arr = [w, v].sort();
+                                emit(arr[0] + "." + arr[1], [strength, 1]);
+                            }
                         }
                     });
                 });
             };
 
-            map = map.toString().replace("__marker__", JSON.stringify(words));
+            var reduce = function (key, values) {
+                return values.map(elem => elem.reduce((a, b) => a + b))
+            };
+
+            map = map.toString().replace("__marker__", JSON.stringify(words.map(obj => obj["_id"])));
             mongo_query(map, count, secondStage, host);
         }
         function secondStage(links_param) {
-            links = links_param;
+            links = links_param.map(link => {
+                link["value"] = link["value"][0] / link["value"][1];
+                return link;
+            });
             render();
         }
         function render() {
@@ -97,8 +109,28 @@
                 graph.addNode(obj["_id"], obj["value"]);
             });
 
-            link.forEach(link => {
-                words = link["_id"].split(".");
+            // one link per node
+            lnks = {};
+            links.forEach(link => {
+                var words = link["_id"].split(".");
+                if(!lnks[words[0]]) {
+                    lnks[words[0]] = Object.keys(Object.keys)
+                }
+                lnks[words[0]].push([words[1], link["value"]]);
+            });
+            Object.keys(lnks).forEach(key =>
+                lnks[key] = lnks[key].sort((a, b) => a[1] - b[1]).splice(0, 1)
+            );
+            Object.keys(lnks).forEach(key => {
+                start = key;
+                lnks[key].forEach(end => {
+                    graph.addLink(start, end[0], end[1])
+                });
+            });
+
+            // top x nodes
+            links.sort((l, m) => l["value"] - m["value"]).splice(0, 250).forEach(link => {
+                var words = link["_id"].split(".");
                 graph.addLink(words[0], words[1], link["value"])
             });
 
@@ -109,18 +141,64 @@
                         .attr("dy", ".4em")
                         .text(node.id);
             });
+
             graphics.link(function(link){
                 return Viva.Graph.svg('path')
-                        .attr('stroke', 'red')
+                        .attr('stroke', '#ccc')
                         .attr('stroke-dasharray', '5, 5');
+            }).placeLink(function(linkUI, fromPos, toPos) {
+                // linkUI - is the object returend from link() callback above.
+                var data = 'M' + fromPos.x + ',' + fromPos.y +
+                        'L' + toPos.x + ',' + toPos.y;
+                // 'Path data' (http://www.w3.org/TR/SVG/paths.html#DAttribute )
+                // is a common way of rendering paths in SVG:
+                linkUI.attr("d", data);
             });
 
+
+
             var layout = Viva.Graph.Layout.forceDirected(graph, {
-                springLength : .1,
-                springCoeff : 0.00005,
-                dragCoeff : 0.02,
-                gravity : -75
+                /**
+                 * Ideal length for links (springs in physical model).
+                 */
+                springLength: 35,
+
+                /**
+                 * Hook's law coefficient. 1 - solid spring.
+                 */
+                springCoeff: 0.0008,
+
+                /**
+                 * Coulomb's law coefficient. It's used to repel nodes thus should be negative
+                 * if you make it positive nodes start attract each other :).
+                 */
+                gravity: -2.5,
+
+                /**
+                 * Theta coefficient from Barnes Hut simulation. Ranged between (0, 1).
+                 * The closer it's to 1 the more nodes algorithm will have to go through.
+                 * Setting it to one makes Barnes Hut simulation no different from
+                 * brute-force forces calculation (each node is considered).
+                 */
+                theta: 1,
+
+                /**
+                 * Drag force coefficient. Used to slow down system, thus should be less than 1.
+                 * The closer it is to 0 the less tight system will be.
+                 */
+                dragCoeff: 0.03,
+
+                /**
+                 * Default time step (dt) for forces integration
+                 */
+                timeStep : 5,
+
+                /**
+                 * Maximum movement of the system which can be considered as stabilized
+                 */
+                stableThreshold: 0.09
             });
+
             var renderer = Viva.Graph.View.renderer(graph, {
                 graphics : graphics,
                 layout : layout
@@ -128,7 +206,7 @@
             renderer.run();
         }
 
-        document.onload = zeroStage;
+        window.onload = zeroStage;
     </script>
 </head>
 
