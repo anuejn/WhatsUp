@@ -17,7 +17,7 @@
         text {
             text-anchor: middle;
             font-family: Serif;
-            text-shadow: 0 0 15px #fff;
+            text-shadow: 0 0 5px #fff;
         }
     </style>
     <script src="js/mongo_query.js"></script>
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="js/vivagraph.min.js"></script>
 
     <script src="params/force/cool.js"></script>
+    <script src="js/host.js"></script>
 
     <script>
         words = [];
@@ -46,9 +47,14 @@
         function firstStage(inWords) {
             words = word_merge(
                 inWords
+                    .filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
+                    .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
+                    .filter(word => word["_id"][0].toUpperCase() == word["_id"][0])
                     .sort((a,b) => b["value"] - a["value"])
                     .slice(0, num_nodes)
-            ).sort((a,b) => b["value"] - a["value"]);
+            ).filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
+            .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
+            .sort((a,b) => b["value"] - a["value"]);
 
             var map = function() {
                 var givenWords = __marker__;
@@ -80,7 +86,7 @@
                             strength = list.reduce((a, b) => a + b, 0);
                             if(strength != 0) {
                                 arr = [w, v].sort();
-                                emit(arr[0] + "." + arr[1], [strength, 1]);
+                                emit(arr[0] + "." + arr[1], JSON.stringify([strength, 1]));
                             }
                         }
                     });
@@ -88,15 +94,20 @@
             };
 
             var reduce = function (key, values) {
-                return values.map(elem => elem.reduce((a, b) => a + b))
+                var vals = values.map(val => JSON.parse(val));
+                var newVals = vals[0].map((e, i) => e + vals[1][i]);
+                return JSON.stringify(newVals);
             };
 
             map = map.toString().replace("__marker__", JSON.stringify(words.map(obj => obj["_id"])));
             map = map.replace("__marker2__", distance_function.toString());
-            mongo_query(map, count, secondStage, host);
+            mongo_query(map, reduce, secondStage, host);
         }
         function secondStage(links_param) {
             links = links_param.map(link => {
+                link["value"] = JSON.parse(link["value"]);
+                return link;
+            }).map(link => {
                 link["value"] = link["value"][0] / link["value"][1];
                 return link;
             });
@@ -106,7 +117,7 @@
             var graph = Viva.Graph.graph();
 
             words.forEach(obj => {
-                graph.addNode(obj["_id"], max_mode_size * obj["value"] / Math.max.apply(Math, Object.keys(words).map(a => words[a]["value"])));
+                graph.addNode(obj["_id"], max_node_size * obj["value"] / Math.max.apply(Math, Object.keys(words).map(a => words[a]["value"])));
             });
 
             // one link per node
@@ -129,7 +140,9 @@
             });
 
             // top x nodes
-            links.sort((l, m) => l["value"] - m["value"]).splice(0, num_top_links).forEach(link => {
+            links.sort((l, m) => {
+                return l["value"] - m["value"];
+            }).splice(0, num_top_links).forEach(link => {
                 var words = link["_id"].split(".");
                 graph.addLink(words[0], words[1], link["value"])
             });
@@ -138,7 +151,7 @@
             graphics.node(function(node) {
                 return Viva.Graph.svg('text')
                         .attr("font-size", node.data)
-                        .attr("dy", ".4em")
+                        .attr("dy", ".25em")
                         .text(node.id);
             });
 

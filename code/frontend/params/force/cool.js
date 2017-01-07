@@ -2,12 +2,11 @@
  * Created by jaro on 07.01.17.
  */
 
-var host = "http://localhost";
-var num_nodes = 250;
-var max_mode_size = 50;
-var distance_function = (a, b) => 1.0 / Math.pow(Math.abs(a - b), 3);
+var num_nodes = 200;
+var max_node_size = 50;
+var distance_function = (a, b) => 1.0 / Math.pow(Math.abs(a - b), 0.0001);
 var num_min_links = 1;
-var num_top_links = 250;
+var num_top_links = num_nodes / 2;
 var layout_params = {
     /**
      * Ideal length for links (springs in physical model).

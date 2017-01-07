@@ -15,6 +15,7 @@
     <script src="js/mongo_query.js"></script>
     <script src="js/stopwords.js"></script>
     <script src="js/word_merge.js"></script>
+    <script src="js/host.js"></script>
 
     <script>
         function map() {
@@ -44,7 +45,7 @@
                     .style("left", () => Math.random() * 100 + "%");
         }
 
-        mongo_query(map, count, render);
+        mongo_query(map, count, render, host);
     </script>
 </head>
 <body>

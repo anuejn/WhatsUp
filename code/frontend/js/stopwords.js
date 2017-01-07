@@ -660,7 +660,17 @@ var german_stopwords = [
     "lassen",
     "gut",
     "de",
-    "zunächst"
+    "zunächst",
+    "insgesammt",
+    "teil",
+    "tag",
+    "prozent",
+    "woche",
+    "monat",
+    "mann",
+    "wochen",
+    "new",
+
 ];
 
 german_stopwords_case = [
