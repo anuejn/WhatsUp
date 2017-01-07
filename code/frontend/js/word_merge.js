@@ -3,15 +3,17 @@
  */
 
 function word_merge(list) {
-    list.forEach((nowItem, nowCount, nowObject) => {
-        nowWord = nowItem["_id"].toLowerCase();
+    modList = list.slice();
+    modList.forEach((nowItem, nowCount, nowObject) => {
+        var regex = new RegExp("^" + nowItem["_id"].toLowerCase() + '.{0,2}','g');
         nowObject.forEach((item, index, object) => {
+            if(nowItem["_id"].toLowerCase() == item["_id"].toLowerCase()) return;
             checkWord = item["_id"].toLowerCase();
-            var regex = new RegExp(nowWord + '.{0,2}','g');
             if(checkWord.match(regex)) {
                 nowObject[nowCount]["value"] += item["value"];
                 object.splice(index, 1);
             }
         });
     });
+    return modList
 }

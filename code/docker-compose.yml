@@ -5,6 +5,8 @@ services:
     build: data-collectors/
     links:
       - mongodb
+    restart: always
+
   backend:
     build: backend/
     links:
@@ -19,3 +21,6 @@ services:
 
   mongodb:
     image: "mongo:latest"
+    ports: 
+      - "27017:27017"
+

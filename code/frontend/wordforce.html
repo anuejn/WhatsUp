@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Visualizer | Word Table</title>
+
+    <style type="text/css" media="screen">
+        html, body, svg {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        text {
+            text-anchor: middle;
+        }
+    </style>
+    <script src="js/mongo_query.js"></script>
+    <script src="js/stopwords.js"></script>
+    <script src="js/word_merge.js"></script>
+    <script type="text/javascript" src="js/vivagraph.min.js"></script>
+
+    <script>
+        var host = "http://metamax.tk";
+
+        words = [];
+        links = [];
+
+        function zeroStage() {
+            var map = function () {
+                var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
+                for (var i = 0; i < words.length; i++) {
+                    var word = words[i];
+                    if(word) {
+                        emit(words[i], 1);
+                    }
+                }
+            };
+            mongo_query(map, count, firstStage, host);
+        }
+        function firstStage(words) {
+            words = word_merge(
+                obj
+                    .filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
+                    .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
+                    .sort((a,b) => b["value"] - a["value"])
+                    .slice(0, 10)
+            ).sort((a,b) => b["value"] - a["value"]);
+
+            var map = function() {
+                var givenWords = "__marker__";
+                var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
+
+                // create dict with {"word": ['o', 'c', 'c', 'u', 'r', 'e', 'n', 'c', 'e']}
+                var wordOccurrences = {};
+                givenWords.forEach(word => {
+                    var occurrences = [];
+                    for(var i = 0; i < words.length; i++) {
+                        if(word = words[i]) {
+                            occurrences.push(i);
+                        }
+                    }
+                    wordOccurrences[word] = occurrences;
+                });
+
+                givenWords.forEach(w => {
+                    givenWords.forEach(v => { // every word combination is covered as i and j
+                        if(w != v) {
+                            list = [];
+                            wordOccurrences[w].forEach(n => {
+                                wordOccurrences[v].forEach(m => {
+                                    list.push(1.0 / Math.abs(n - m));
+                                });
+                            });
+
+                            arr = [w, v].sort();
+                            emit(arr[0] + "." + arr[1], list.reduce((a, b) => a + b))
+                        }
+                    });
+                });
+            };
+
+            map = map.toString().replace("__marker__", JSON.stringify(words));
+            mongo_query(map, count, secondStage, host);
+        }
+        function secondStage(links_param) {
+            links = links_param;
+            render();
+        }
+        function render() {
+            var graph = Viva.Graph.graph();
+
+            words.forEach(obj => {
+                graph.addNode(obj["_id"], obj["value"]);
+            });
+
+            link.forEach(link => {
+                words = link["_id"].split(".");
+                graph.addLink(words[0], words[1], link["value"])
+            });
+
+            var graphics = Viva.Graph.View.svgGraphics();
+            graphics.node(function(node) {
+                return Viva.Graph.svg('text')
+                        .attr("font-size", node.data)
+                        .attr("dy", ".4em")
+                        .text(node.id);
+            });
+            graphics.link(function(link){
+                return Viva.Graph.svg('path')
+                        .attr('stroke', 'red')
+                        .attr('stroke-dasharray', '5, 5');
+            });
+
+            var layout = Viva.Graph.Layout.forceDirected(graph, {
+                springLength : .1,
+                springCoeff : 0.00005,
+                dragCoeff : 0.02,
+                gravity : -75
+            });
+            var renderer = Viva.Graph.View.renderer(graph, {
+                graphics : graphics,
+                layout : layout
+            });
+            renderer.run();
+        }
+
+        document.onload = zeroStage;
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

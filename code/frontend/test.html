@@ -13,10 +13,12 @@
 </head>
 
 <body>
+    <!-- first place a loading animation here -->
+    <img src="img/loading.svg" alt="loading..." class="loading"/>
     <main id="out">
         <!--the actual content goes here -->
         <script>
-            function map() {
+                function map() {
                 var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
                 for (var i = 0; i < words.length; i++) {
                     var word = words[i];
@@ -28,7 +30,7 @@
 
             function render(obj) {
                 obj = obj.filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0).sort((a,b) => b["value"] - a["value"]);
-                word_merge(obj);
+                // word_merge(obj);
 
                 var table = "<h1>Most often used words:</h1>" +
                 "<table style='margin: auto;'>";
@@ -45,11 +47,33 @@
 
             var data = [];
             // mongo_query(map, count, render, "http://metamax.tk");
-            data = 
+            data = [
+                {
+                    "_id" : "Jahr",
+                    "value" : 42,
+                },
+                {
+                    "_id" : "Jahre",
+                    "value" : 42,
+                },                {
+                    "_id" : "Jahrn",
+                    "value" : 42,
+                },
+                {
+                    "_id" : "Mensch",
+                    "value" : 42,
+                },
+                {
+                    "_id" : "Menschen",
+                    "value" : 42,
+                },
+                {
+                    "_id" : "Random",
+                    "value" : 42,
+                }
+            ];
+            render(data);
         </script>
-
-        <!-- first place a loading animation here -->
-        <img src="img/loading.svg" alt="loading..." class="loading"/>
     </main>
 </body>
 
