@@ -25,9 +25,9 @@
     <script src="js/word_merge.js"></script>
     <script type="text/javascript" src="js/vivagraph.min.js"></script>
 
-    <script>
-        var host = "";
+    <script src="params/force/cool.js"></script>
 
+    <script>
         words = [];
         links = [];
 
@@ -46,14 +46,13 @@
         function firstStage(inWords) {
             words = word_merge(
                 inWords
-                    .filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
-                    .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
                     .sort((a,b) => b["value"] - a["value"])
-                    .slice(0, 250)
+                    .slice(0, num_nodes)
             ).sort((a,b) => b["value"] - a["value"]);
 
             var map = function() {
                 var givenWords = __marker__;
+                var distance_function = __marker2__;
                 var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ").filter(w => w);
 
                 // create dict with {"word": ['o', 'c', 'c', 'u', 'r', 'e', 'n', 'c', 'e']}
@@ -74,7 +73,7 @@
                             list = [];
                             wordOccurrences[w].forEach(n => {
                                 wordOccurrences[v].forEach(m => {
-                                    list.push(1.0 / Math.pow(Math.abs(n - m), 3));
+                                    list.push(distance_function(n, m));
                                 });
                             });
 
@@ -93,6 +92,7 @@
             };
 
             map = map.toString().replace("__marker__", JSON.stringify(words.map(obj => obj["_id"])));
+            map = map.replace("__marker2__", distance_function.toString());
             mongo_query(map, count, secondStage, host);
         }
         function secondStage(links_param) {
@@ -106,7 +106,7 @@
             var graph = Viva.Graph.graph();
 
             words.forEach(obj => {
-                graph.addNode(obj["_id"], obj["value"]);
+                graph.addNode(obj["_id"], max_mode_size * obj["value"] / Math.max.apply(Math, Object.keys(words).map(a => words[a]["value"])));
             });
 
             // one link per node
@@ -119,7 +119,7 @@
                 lnks[words[0]].push([words[1], link["value"]]);
             });
             Object.keys(lnks).forEach(key =>
-                lnks[key] = lnks[key].sort((a, b) => a[1] - b[1]).splice(0, 1)
+                lnks[key] = lnks[key].sort((a, b) => a[1] - b[1]).splice(0, num_min_links)
             );
             Object.keys(lnks).forEach(key => {
                 start = key;
@@ -129,7 +129,7 @@
             });
 
             // top x nodes
-            links.sort((l, m) => l["value"] - m["value"]).splice(0, 250).forEach(link => {
+            links.sort((l, m) => l["value"] - m["value"]).splice(0, num_top_links).forEach(link => {
                 var words = link["_id"].split(".");
                 graph.addLink(words[0], words[1], link["value"])
             });
@@ -157,47 +157,7 @@
 
 
 
-            var layout = Viva.Graph.Layout.forceDirected(graph, {
-                /**
-                 * Ideal length for links (springs in physical model).
-                 */
-                springLength: 35,
-
-                /**
-                 * Hook's law coefficient. 1 - solid spring.
-                 */
-                springCoeff: 0.0008,
-
-                /**
-                 * Coulomb's law coefficient. It's used to repel nodes thus should be negative
-                 * if you make it positive nodes start attract each other :).
-                 */
-                gravity: -2.5,
-
-                /**
-                 * Theta coefficient from Barnes Hut simulation. Ranged between (0, 1).
-                 * The closer it's to 1 the more nodes algorithm will have to go through.
-                 * Setting it to one makes Barnes Hut simulation no different from
-                 * brute-force forces calculation (each node is considered).
-                 */
-                theta: 1,
-
-                /**
-                 * Drag force coefficient. Used to slow down system, thus should be less than 1.
-                 * The closer it is to 0 the less tight system will be.
-                 */
-                dragCoeff: 0.03,
-
-                /**
-                 * Default time step (dt) for forces integration
-                 */
-                timeStep : 5,
-
-                /**
-                 * Maximum movement of the system which can be considered as stabilized
-                 */
-                stableThreshold: 0.09
-            });
+            var layout = Viva.Graph.Layout.forceDirected(graph, layout_params);
 
             var renderer = Viva.Graph.View.renderer(graph, {
                 graphics : graphics,
