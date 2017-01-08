@@ -24,9 +24,7 @@
     <script src="js/word_merge.js"></script>
     <script type="text/javascript" src="js/vivagraph.min.js"></script>
 
-    <script src="params/force/cool.js"></script>
-    <script src="js/host.js"></script>
-
+    <script src="params/force/first.js"></script>
     <script>
         words = [];
         links = [];
@@ -41,7 +39,7 @@
                     }
                 }
             };
-            mongo_query(map, count, firstStage, host);
+            mongo_query(map, count, firstStage);
         }
         function firstStage(inWords) {
             words = word_merge(
@@ -100,7 +98,7 @@
 
             map = map.toString().replace("__marker__", JSON.stringify(words.map(obj => obj["_id"])));
             map = map.replace("__marker2__", distance_function.toString());
-            mongo_query(map, reduce, secondStage, host);
+            mongo_query(map, reduce, secondStage);
         }
         function secondStage(links_param) {
             links = links_param.map(link => {

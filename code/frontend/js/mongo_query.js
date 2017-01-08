@@ -1,9 +1,10 @@
 /**
  * Created by jaro on 13.11.16.
  */
+var defualtHost = document.location.host.indexOf(":") != -1 ? "http://localhost" : "";
 
 function mongo_query(map, reduce, callback, host) {
-    host = host ? host : "";
+    host = host ? host : defualtHost;
 
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {

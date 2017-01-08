@@ -1,56 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#000">
-    
-    <title>MetaMax</title>
+    <script src="js/d3.v3.js"></script>
+    <script src="js/d3.layout.cloud.js"></script>
 
-
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/version.css">
-
-    <script src="js/d3.v4.min.js"></script>
     <script src="js/mongo_query.js"></script>
     <script src="js/stopwords.js"></script>
     <script src="js/word_merge.js"></script>
-    <script src="js/host.js"></script>
 
+    <script src="params/cloud/first.js"></script>
     <script>
-        function map() {
-            var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
-            for (var i = 0; i < words.length; i++) {
-                var word = words[i];
-                if(word) {
-                    emit(words[i], 1);
+        window.onload = () => {
+            function map() {
+                var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
+                for (var i = 0; i < words.length; i++) {
+                    var word = words[i];
+                    if(word) {
+                        emit(words[i], 1);
+                    }
                 }
             }
-        }
 
-        function render(arr) {
-            data = arr.filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0).sort((a,b) => b["value"] - a["value"]);
+            mongo_query(map, count, render);
+        };
 
-            console.log(data);
+        var render = (wordList) => {
+            wordList = word_merge(wordList
+                    .filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
+                    .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
+                    .sort((a,b) => b["value"] - a["value"])
+                    .slice(0, num_words)
+            ).map(elem => {
+                return {text: elem["_id"], size: elem["value"] / text_divisor};
+            }).sort((a,b) => b["value"] - a["value"]);
+            console.log(wordList);
+            var layout = d3.layout.cloud()
+                    .size([window.innerWidth, window.innerHeight])
+                    .words(wordList)
+                    .padding(padding)
+                    .rotate(() => 0)
+                    .font("Serif")
+                    .fontSize(d => d.size)
+                    .on("end", draw);
 
-            d3.select("main")
-                    .selectAll("div")
-                    .data(data)
-                    .enter()
-                    .append("div")
-                    .style("font-size", d => d["value"] + "px")
-                    .text(d => d["_id"])
-                    .classed("word", true)
-                    .style("top", () => Math.random() * 100 + "%")
-                    .style("left", () => Math.random() * 100 + "%");
-        }
+            layout.start();
 
-        mongo_query(map, count, render, host);
+            function draw(words) {
+                d3.select("body").append("svg")
+                        .attr("width", layout.size()[0])
+                        .attr("height", layout.size()[1])
+                        .append("g")
+                        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+                        .selectAll("text")
+                        .data(words)
+                        .enter().append("text")
+                        .style("font-size", d => d.size + "px")
+                        .style("font-family", "Serif")
+                        .attr("text-anchor", "middle")
+                        .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+                        .text(d =>  d.text);
+            }
+
+        };
     </script>
 </head>
 <body>
-<main>
-    <!-- this is the d3.js container -->
-</main>
+
 </body>
 </html>
