@@ -17,7 +17,6 @@
         text {
             text-anchor: middle;
             font-family: Serif;
-            text-shadow: 0 0 5px #fff;
         }
     </style>
     <script src="js/mongo_query.js"></script>
@@ -108,7 +107,7 @@
                 link["value"] = JSON.parse(link["value"]);
                 return link;
             }).map(link => {
-                link["value"] = link["value"][0] / link["value"][1];
+                link["value"] = link["value"][0];
                 return link;
             });
             render();
@@ -157,7 +156,7 @@
 
             graphics.link(function(link){
                 return Viva.Graph.svg('path')
-                        .attr('stroke', '#ccc')
+                        .attr('stroke', '#eee')
                         .attr('stroke-dasharray', '5, 5');
             }).placeLink(function(linkUI, fromPos, toPos) {
                 // linkUI - is the object returend from link() callback above.

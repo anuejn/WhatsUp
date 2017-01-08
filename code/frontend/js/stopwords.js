@@ -670,13 +670,39 @@ var german_stopwords = [
     "mann",
     "wochen",
     "new",
+    "kartengeschichte",  // some series of ZEIT ONLINE
+    "beipiel",
+    "zahl",
+    
+    "januar",
+    "februabr",
+    "märz",
+    "april",
+    "mai",
+    "juni",
+    "juli",
+    "august",
+    "september",
+    "oktober",
+    "november",
+    "dezember",
+
+    "montag",
+    "dienstag",
+    "mittwoch",
+    "donnerstag",
+    "freitag",
+    "samstag",
+    "sonntag",
+
 
 ];
 
 german_stopwords_case = [
     "ZEIT",
     "SPIEGEL",
-    "ONLINE"
+    "ONLINE",
+    "BILD"
 ];
 
 var stopwords = german_stopwords;
