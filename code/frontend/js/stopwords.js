@@ -673,7 +673,11 @@ var german_stopwords = [
     "kartengeschichte",  // some series of ZEIT ONLINE
     "beipiel",
     "zahl",
-    
+    "titel",
+    "the",
+    "serie",
+    "meter",
+
     "januar",
     "februabr",
     "märz",

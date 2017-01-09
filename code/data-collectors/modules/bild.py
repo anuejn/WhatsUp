@@ -29,7 +29,7 @@ def get_articles(last_updated):
                 "raw": page.html(),
 
                 "meta": {
-                    "source": "spon",
+                    "source": "bild",
                     "tags": list(map(lambda tag: tag["term"], raw_article["tags"])),
                     "timestamp": time.mktime(raw_article["published_parsed"]),
                     "url": raw_article["link"]

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="js/d3.v3.js"></script>
+    <script src="js/d3_timeseries.js"></script>
+    <link rel="stylesheet" href="js/d3_timeseries.css">
+
+    <script src="js/mongo_query.js"></script>
+    <script>
+        data = {};
+
+        window.onload = () => {
+            function map() {
+                var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
+                emit(new Date(this.meta.timestamp * 1000).toISOString().slice(0, 10) + "." + this.meta.source, 1);
+                words.forEach(word => {
+                    if(word == "__marker__") {
+                    }
+                });
+            }
+            map = map.toString().replace("__marker__", "das");
+            mongo_query(map, count, render);
+        };
+
+        window.addEventListener("resize", render);
+        var render = (wordList) => {
+            data = {};
+            wordList.map(elem => {
+                var source = data[elem["_id"].split(".")[1]];
+                if(!source) {
+                    source = [];
+                }
+                source.push({date: new Date(elem["_id"].split(".")[0]), n: elem["value"]});
+                data[elem["_id"].split(".")[1]] = source;
+            });
+            console.log(data);
+
+            var chart = d3.timeseries()
+                    //.yscale.domain([0])
+                    .width(window.innerWidth);
+
+            Object.keys(data).forEach(key => {
+                chart.addSerie(data[key], {x:'date',y:'n'}, {interpolate:'linear', label: key})
+            });
+            chart('#chart')
+
+        };
+    </script>
+</head>
+<body>
+    <div id="chart"></div>
+</body>
+</html>
