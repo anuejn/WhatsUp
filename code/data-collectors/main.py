@@ -41,7 +41,11 @@ if __name__ == "__main__":
 
             # push the articles in the DB
             for article in articles:
+                if not article["text"]:
+                    print("fuck: " + article["_id"])
+                    continue
                 push_article(collection, article)
+        print("crawling finished")
         time.sleep(60)
 
 

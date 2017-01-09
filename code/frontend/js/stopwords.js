@@ -634,6 +634,7 @@ var german_stopwords = [
     "neun",
     "zehn",
     "wollen",
+    "ge",
 
     "erste",
     "zweite",

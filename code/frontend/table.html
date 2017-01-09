@@ -6,7 +6,6 @@
 
     <title>Visualizer | Word Table</title>
 
-    <link rel="stylesheet" href="css/main.css">
     <script src="js/mongo_query.js"></script>
     <script src="js/stopwords.js"></script>
     <script src="js/word_merge.js"></script>
@@ -35,8 +34,7 @@
                                 .slice(0, 500)
                 ).sort((a,b) => b["value"] - a["value"]);
 
-                var table = "<h1>Most often used words:</h1>" +
-                "<table style='margin: auto;'>";
+                var table = "<table style='margin: auto;'>";
                 table += "<tr><th>word</th><th>count</th></tr>";
                 obj.forEach(elm => {
                     table += "<tr><td>" + elm["_id"] + "</td><td>" + elm["value"] + "</td></tr>";

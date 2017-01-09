@@ -3,5 +3,5 @@
  */
 
 var num_words = 200;
-var text_divisor = 3;
+var text_divisor = 4;
 var padding = 2;
