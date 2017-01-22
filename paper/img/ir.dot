@@ -1,0 +1,18 @@
+graph G {
+      rankdir="LR"
+        node [shape=record,height=1,fontsize=20];
+        node [width=4.1];
+
+        Artikel -- Titel;
+        Artikel -- Untertitel;
+
+        Artikel -- Metadaten;
+        Metadaten -- Zeitung;
+        Metadaten -- Autor;
+        Metadaten -- Tags;
+        Metadaten -- Veröffentlichungszeitpunkt;
+        Metadaten -- URL;
+
+        Artikel -- Kuszfassung;
+        Artikel -- Text;
+        }
