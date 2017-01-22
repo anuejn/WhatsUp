@@ -22,15 +22,10 @@ function mongo_query(map, reduce, callback, host) {
 }
 
 function example_map() {
-    emit("count", 1)
+    emit("count", 1);
 }
 
 function example_reduce(key, values) {
-    var total = 0;
-    for (var i = 0; i < values.length; i++) {
-        total += values[i];
-    }
-    return total;
-}
-
+    return values.reduce((previousValue, currentValue) => currentValue + previousValue);
+} 
 var count = example_reduce;

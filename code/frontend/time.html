@@ -12,6 +12,9 @@
 
         window.onload = () => {
             function map() {
+                if(this.meta.timestamp < 1483228800) {
+                    return;
+                }
                 var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
                 words.forEach(word => {
                     emit(new Date(this.meta.timestamp * 1000).toISOString().slice(0, 13) + "." + this.meta.source, 1);

@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 
 COPY . /code
 
-CMD ["python", "mongo_http.py"]
+CMD ["python", "-u", "mongo_http.py"]
