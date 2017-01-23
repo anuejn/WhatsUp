@@ -9,7 +9,7 @@ Relativ schnell war mir also klar, das ich mich mit Datenvisualisierung beschäf
 Also fing ich an und suchte Zeitungen aus.
 
 # Die Auswahl der Zeitungen
-Als das Thema der Halbjahresarbeit feststand musste ich Zeitungen aussuchen, die ich analysieren will. Hierbei orientierte ich mich an einer Studie der Arbeitsgemeinschaft Online Forschung aus dem November 2014. Hierbei ging ich nach der Anzahl der "Unique Users", also quasi der Leser der jeweiligen Nachrichtenseite. Nach dieser Studie ^[http://meedia.de/2015/01/29/agof-news-top-50-n24-zahlen-explodieren-auch-manager-magazin-und-taz-mit-riesen-plus/] sind die 10 Nachrichtenseiten mit den meisten Lesern:
+Als das Thema der Halbjahresarbeit feststand musste ich Zeitungen aussuchen, die ich analysieren will. Hierbei orientierte ich mich an einer Studie der Arbeitsgemeinschaft Online Forschung aus dem November 2014. Hierbei ging ich nach der Anzahl der "Unique Users", also quasi der Leser der jeweiligen Nachrichtenseite. Nach dieser Studie @topten sind die 10 Nachrichtenseiten mit den meisten Lesern:
 
 | Rang | Nachrichtenseite | Leser (in Milionen) |
 |------|------------------|---------------------|
