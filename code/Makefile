@@ -8,7 +8,7 @@ deploy:
 	DOCKER_HOST=tcp://212.47.231.85:2376 \
 	DOCKER_CERT_PATH=/home/jaro/.docker/machine/machines/deploy \
 	DOCKER_MACHINE_NAME=deploy \
-	docker-compose up --build -d
+	docker-compose -f deploy.yml up --build -d
 
 clean:
 	docker-compose -f dev.yml down --remove-orphans

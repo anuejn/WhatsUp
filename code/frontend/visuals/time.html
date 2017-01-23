@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <script src="js/d3.v3.js"></script>
-    <script src="js/d3_timeseries.js"></script>
-    <link rel="stylesheet" href="js/d3_timeseries.css">
+    <script src="../lib/d3.v3.js"></script>
+    <script src="../lib/d3_timeseries.js"></script>
+    <link rel="stylesheet" href="../lib/d3_timeseries.css">
 
-    <script src="js/mongo_query.js"></script>
+    <script src="../js/mongo_query.js"></script>
     <script>
         data = {};
 
@@ -18,7 +18,7 @@
                 var words = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ").split(" ");
                 words.forEach(word => {
                     if(/__marker__/i.test(word)) {
-                        emit(new Date(this.meta.timestamp * 1000).toISOString().slice(0, 10) + "." + this.meta.source, 1);
+                        emit(new Date(this.meta.timestamp * 1000).toISOString().slice(0, 13) + "." + this.meta.source, 1);
                     }
                 });
             }
@@ -34,7 +34,7 @@
                 if(!source) {
                     source = [];
                 }
-                source.push({date: new Date(elem["_id"].split(".")[0]), n: elem["value"]});
+                source.push({date: new Date(elem["_id"].split(".")[0] + ":00"), n: elem["value"]});
                 data[elem["_id"].split(".")[1]] = source;
             });
             console.log(data);
