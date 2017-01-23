@@ -13,5 +13,8 @@ deploy:
 clean:
 	docker-compose -f dev.yml down --remove-orphans
 
+restore: dev
+	mongorestore --port 27027 backup
+
 count:
 	cloc --exclude-dir=lib --exclude-lang=XML .
