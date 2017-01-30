@@ -32,7 +32,7 @@
                     .sort((a,b) => b["value"] - a["value"])
                     .slice(0, num_words)
             ).map(elem => {
-                return {text: elem["_id"], size: elem["value"] / text_divisor};
+                return {text: elem["_id"], size: elem["value"] / wordList[0]["value"] * text_multiply};
             }).sort((a,b) => b["value"] - a["value"]);
             console.log(wordList);
             var layout = d3.layout.cloud()

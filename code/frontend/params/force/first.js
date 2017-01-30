@@ -4,9 +4,9 @@
 
 var num_nodes = 200;
 var max_node_size = 50;
-var distance_function = (a, b) => 1.0 / Math.pow(Math.abs(a - b), 0.0001);
-var num_min_links = 1;
-var num_top_links = num_nodes / 2;
+var distance_function = (a, b) => 1.0 / Math.pow(Math.abs(a - b), 0.001);
+var num_min_links = 2;
+var num_top_links = num_nodes;
 var layout_params = {
     /**
      * Ideal length for links (springs in physical model).
