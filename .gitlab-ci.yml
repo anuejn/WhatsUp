@@ -5,7 +5,8 @@ services:
   
 before_script:
   - apk update
-  - apk add make
+  - apk add make py-pip
+  - pip install docker-compose
   
 smoke-test:
   stage: test
