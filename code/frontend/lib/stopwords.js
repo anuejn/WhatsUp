@@ -699,7 +699,11 @@ var german_stopwords = [
     "freitag",
     "samstag",
     "sonntag",
-    "fig",
+
+    "foto",
+    "uhr",
+    "jahr",
+    "dpa",
 
 ];
 

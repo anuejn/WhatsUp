@@ -1,11 +1,9 @@
 /**
  * Created by jaro on 13.11.16.
  */
-var defualtHost = document.location.host.indexOf(":") != -1 ? "http://localhost" : "";
+var host = document.location.host.indexOf(":") != -1 ? "http://localhost" : "";
 
-function mongo_query(map, reduce, callback, host) {
-    host = host ? host : defualtHost;
-
+function mongo_query(map, reduce, callback, query) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -16,6 +14,11 @@ function mongo_query(map, reduce, callback, host) {
     var requestUrl = host + "/api";
     requestUrl += "?map=" + encodeURIComponent(map.toString());
     requestUrl += "&reduce=" + encodeURIComponent(reduce.toString());
+    if(query && (typeof query === 'string' || query instanceof String)) {
+        requestUrl += "&query=" + encodeURIComponent(query.toString());
+    } else if(typeof(query) === "boolean"){
+        requestUrl += "&query";
+    }
 
     request.open("GET", requestUrl, true);
     request.send();

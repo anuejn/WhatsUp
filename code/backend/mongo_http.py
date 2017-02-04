@@ -17,7 +17,10 @@ app = Flask(__name__)
 def wrap():
     map_function = request.args.get('map')
     reduce_function = request.args.get('reduce')
-    query = request.cookies.get('query')
+    if "query" in request.args:
+        query = request.args.get('query')
+    else:
+        query = request.cookies.get('query')
 
     if reduce_function is None or map_function is None:
         return abort(400)
@@ -25,8 +28,10 @@ def wrap():
     map_function = str(map_function)
     reduce_function = str(reduce_function)
 
-    if query:
-        query = json.loads(base64.b64decode(query).decode("utf-8"))
+    if query and str(query) != "":
+        query = json.loads(base64.b64decode(str(query)).decode("utf-8"))
+    else:
+        query = {}
 
     result = collection.map_reduce(Code(map_function), Code(reduce_function), out={"inline": 1}, query=query)
 
