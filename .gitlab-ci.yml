@@ -2,6 +2,14 @@ image: docker:latest
 
 services:
   - docker:dind
+  
+before_script:
+  - apk add make
+  
+smoke-test:
+  stage: test
+  script:
+    - make
 
 deploy:
   stage: deploy
