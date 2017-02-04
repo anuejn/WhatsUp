@@ -8,9 +8,9 @@ Nun sollte eine Übersicht erscheinen, die alle möglichen Visualisierungen und 
 # Fazit
 Insgesamt fand ich meine Halbjahresarbeit sehr interessant. Anfangs ging es mir nur darum, Wortwolken, wie sie im Spiegel zu finden waren, für verschiedene Andere Zeitungen zu erstellen. Dies weitete sich dann aber relativ schnell aus und ich begann mit anderen Möglichekeiten der Auswertung und Visualisierung zu experimentieren. Einen großen Teil der Arbeit, die ich in die Halbjahresarbeit steckte, steckte ich in die Entwicklung dieses Systems, das die verschiedenen Visualisierungen ermöglicht. Für mich war es persönlich eine gute Herausforderung, die Möglichkeit zur Analyse zu entwickeln. Diese ermöglicht es dann jedem selbst, die eigentliche Analyse nach eigenen Parametern durchzuführen und dementsprechend seine eigenen Schlüsse ziehen. Beispielhaft habe ich auch einige Analysen durcheführt und sie interpretiert, um einen Denkanstoß zu geben und die sehr vielfältigen Möglichkeiten zu demonstrieren.
 
-Mit der Auswertungssoftware bin ich alles in allem sehr zufrieden. Besonders die sehr flexible und modulare Architektur ermögliht auch Wiederverwendbarkeit der Codes in weiteren Datenanalyseprojekten. Das Softwaretechnisch größte Problem, die Geschwindigkeit ließe sich wahrscheinlich relativ einfach durch ein austauschen der
+Mit der Auswertungssoftware bin ich alles in allem sehr zufrieden. Besonders die sehr flexible und modulare Architektur ermögliht auch Wiederverwendbarkeit der Codes in weiteren Datenanalyseprojekten. Das Softwaretechnisch größte Problem, die Geschwindigkeit ließe sich wahrscheinlich relativ einfach durch ein austauschen der der Datenbank, durch etwas passenderes, das Zwischenergebnisse speichert, lösen. Insgesamt sind im Rahmen des Projekts ungefähr 1000 Zeilen code entstanden und ich habe auch auf der technischen Seite vieles neues gelernt. So habe ich zum Beispiel das erste mal Docker verwendet und NoSQL-Datenbanken verstanden.
 
-Mit meinem eigentlichen Ergebniss, der Analysesoftware kann nun der interessierte Leser nun seine Eigenen schlüsse Ziehen.
+Mit meinem eigentlichen Ergebnis, der Analysesoftware kann nun der interessierte Leser nun seine Eigenen schlüsse Ziehen und die Aktuelle Nachrichtenlage aus einer statistischen Metaperspektive betrachten, womit ich mein Ziel erreicht habe.
 
 \pagebreak
 
