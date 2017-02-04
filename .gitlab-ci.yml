@@ -10,6 +10,7 @@ before_script:
 smoke-test:
   stage: test
   script:
+    - ls
     - make
 
 deploy:
