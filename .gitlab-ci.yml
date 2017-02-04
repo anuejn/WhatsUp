@@ -4,6 +4,7 @@ services:
   - docker:dind
   
 before_script:
+  - apk update
   - apk add make
   
 smoke-test:
