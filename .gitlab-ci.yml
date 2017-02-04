@@ -1,0 +1,9 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+deploy:
+  stage: deploy
+  script:
+    - make deploy
