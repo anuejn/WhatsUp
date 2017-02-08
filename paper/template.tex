@@ -272,11 +272,19 @@ $endif$
 \fi
 
 \usepackage[ngerman]{babel}
+
+\usepackage{titling}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 $if(title)$
-\maketitle
+{\Huge \bfseries \sffamily $title$}\\[4ex]
+{\Large \sffamily $subtitle$}\\[4ex]
+\begin{center}
+  \includegraphics[height = 13.5cm]{img/titlepage.png}\\
+\end{center}
+\vspace{.5cm}
+{\Large \sffamily $author$}
 \thispagestyle{empty}
 $endif$
 

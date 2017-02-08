@@ -33,11 +33,11 @@ Das MapReduce-Verfahren hat einige große Stärken, wie z.B. die hohe Parallelis
 
 ![Der MapReduce Prozess als Grafik @mapreduce](img/MapReduce.png){#fig:mapreduce}
 
-1. Am Anfang des Prozesses steht eine Menge aus $n$ Eingangsdatensätzen. In meinem Fall sind das die Zeitungsartikel, die als Objekte mit der oben beschriebenen Datenstruktur vorliegen. Für jeden dieser Artikel wird jetzt die Map-Funktion ausgeführt. Diese ordnet jedem Artikel $n$ Schlüssel-Wert-Paare zu. In dem Fall, dass wir zu jedem vorkommenden Wort die Häufigkeit bestimmen wollen, ordnet die Map-Funktion also jedem Artikel die Menge der darin enthaltenen Wörter zu. Da diese Funktion auf jeden Artikel angewandt wird, kann man sich in diesem Fall den gesammten Map-Prozess als eine Funktion vorstellen, die die Menge aller Artikel der Menge der darin enthaltenen Worte zuordnet. Der hierzu zugehörige Code dieser Map-Funktion ist:
+1. Am Anfang des Prozesses steht eine Menge aus $n$ Eingangsdatensätzen. In meinem Fall sind das die Zeitungsartikel, die als Objekte mit der oben beschriebenen Datenstruktur vorliegen. Für jeden dieser Artikel wird jetzt die Map-Funktion ausgeführt. Diese ordnet jedem Artikel $n$ Schlüssel-Wert-Paare zu. In dem Fall, dass wir zu jedem vorkommenden Wort die Häufigkeit bestimmen wollen, ordnet die Map-Funktion also jedem Artikel die Menge der darin enthaltenen Wörter zu. Da diese Funktion auf jeden Artikel angewandt wird, kann man sich in diesem Fall den gesamten Map-Prozess als eine Funktion vorstellen, die die Menge aller Artikel der Menge der darin enthaltenen Worte zuordnet. Der hierzu zugehörige Code dieser Map-Funktion ist:
 ```javascript
 function map() {
       var text = this.text.replace(/[^A-Za-zÄäÖöÜüß ]/g, " ");   // entferne alle überfüssigen Satzzeichen, wie .,?!-
-      var words = text.split(" ");   // Teile den text in Wörter
+      var words = text.split(" ");   // Teile den Text in Wörter
       for (var i = 0; i < words.length; i++) {   // für jedes Wort
             var word = words[i];
             if(word) {
@@ -46,8 +46,7 @@ function map() {
       }
 }
 ```
-
-\todo{regex}
+Die etwas seltsam anmutende Zeichenkette `/[^A-Za-zÄäÖöÜüß ]/g` in Zeile 2 ist ein regulärer Ausdruck: Reguläre Ausdrücke sind eine formale Beschreibungssprache für abstrakten Text @regex, die man zum Beispiel benötigt, um, wie in diesem Beispiel, alle Zeichen, die nicht A-Z, a-z, Ö, ö, Ä, ä, Ü, ü, oder ß sind durch ein Leerzeichen zu ersetzen. Reguläre Ausdrücke werden uns auch im weiteren Verlauf noch oft begegnen, da sie essenziell für digitale Textverarbeitung sind.
 
 2. Im nächsten Schritt werden Elemente mit gleichen Schlüsseln gruppiert. Nach diesem Schritt liegt also eine Menge aus Schlüssel-Wertmengenpaaren vor (Auch wenn ich immer wieder das Wort Menge verwende, meine ich eigentlich Multimengen, da es relevent ist, wie oft ein bestimmtes Element in der Menge vorkommt @multimenge). Dieser Schritt ist, anders als die anderen beiden Schritte, bei allen anderen Abfragen gleich. Da in unserem Beispiel das Wort als Schlüssel verwendet wurde, sähe eine beispielhafte Menge nach diesem Schritt wie folgt aus, was stark an eine Strichliste erinnert:
 ```javascript
@@ -60,26 +59,26 @@ function map() {
 3. Im dritten und letzten Schritt wird für jeden Schlüssel die sogenannte Reduce-Funktion angewandt. Diese reduziert die Mengen, die den Schlüsseln zugeordnet sind, auf einen Wert. In unserem Beispiel fällt die Reduce-Funktion relativ einfach aus, da sie nur die Elemente der Menge aufsummieren muss:
 ```javascript
 reduce(key, values) {
-      return values.reduce((previousValue, currentValue) => currentValue + previousValue);
+      return values.reduce((a, b) => a + b);  // => bedeutet so viel wie "wird zu"
 }
 ```
 4. Der vierte und letzte Schritt gehört eigentlich nicht mehr zum MapReduce-Verfahren. Dieser wird nach dem MapReduce-Verfahren ausgeführt und dient dazu, die Ergebnisse zu sortieren und eventuell Feinheiten zu verbessern. So ist es zum Beispiel möglich, selten genutzte Worte oder sogenannte Stoppworte in diesem Schritt auszusortieren. Stoppworte sind häufig auftetende Worte, die keine Relevanz für die Erfassung des Dokumenteninhaltes haben. Hierfür verwende ich verschiedene Stoppwortlisten, die von Sprachforschern erstellt worden sind, zusammen mit eigenen Ergänzungen. Der hierzu gehörige Code, der die Wortliste filtert, sieht wie folgt aus:
 ```javascript
 function filter(data) {
-      return data.filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
+      return data.filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)  // word["_id"] ist das eigentliche Wort
 }
 ```
 Des weiteren wird in diesem Schritt versucht, Wörter mit dem gleichen Stamm, und somit mit der gleichen Bedeutung zusammenzuführen, auch wenn diese unterschiedliche Endungen haben. Ein Beispiel hierfür ist, dass zum Beispiel die Wörter "Trump" und "Trumps" zusammengezählt werden. Hierbei wird immer das kürzeste Wort behalten, da dies meist die Grundform ist. Der Code hierfür ist nicht ganz so einfach:
 ```javascript
 function word_merge(list) {
-    modList = list.slice();
-    modList.forEach((nowItem, nowCount, nowObject) => {
-        var regex = new RegExp("^" + nowItem["_id"].toLowerCase() + '.{0,2}','g');
-        nowObject.forEach((item, index, object) => {
-            if(nowItem["_id"].toLowerCase() == item["_id"].toLowerCase()) return;
+    modList = list.slice();  // kopiere die liste in eine neue Unabhängige
+    modList.forEach((nowItem, nowCount, nowObject) => {  // für jedes Wort
+        var regex = new RegExp("^" + nowItem["_id"].toLowerCase() + '.{0,2}','g');  // baue einen regulären Ausdruck, der die Ähnlichkeit abbildet
+        nowObject.forEach((item, index, object) => {  // für jedes Wort
+            if(nowItem["_id"].toLowerCase() == item["_id"].toLowerCase()) return;  // vergleiche nicht jedes wort mit sich selbst
             checkWord = item["_id"].toLowerCase();
-            if(checkWord.match(regex)) {
-                nowObject[nowCount]["value"] += item["value"];
+            if(checkWord.match(regex)) {  // wende den regulären Ausdruck an - sind sich die Wörter ähnlich?
+                nowObject[nowCount]["value"] += item["value"];  // führe ähnliche Wörter zusammen
                 object.splice(index, 1);
             }
         });
