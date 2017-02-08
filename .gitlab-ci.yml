@@ -1,0 +1,19 @@
+image: docker:latest
+
+services:
+  - docker:dind
+  
+before_script:
+  - apk update
+  - apk add make py-pip
+  - pip install docker-compose
+  
+smoke-test:
+  stage: test
+  script:
+    - cd code && make
+
+deploy:
+  stage: deploy
+  script:
+    - cd code && make deploy
