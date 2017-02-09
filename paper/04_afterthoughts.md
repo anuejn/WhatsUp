@@ -14,6 +14,4 @@ Mit meinem eigentlichen Ergebnis, der Analysesoftware, kann nun der interessiert
 
 \pagebreak
 
-# Quellen
-
-\todo{dates}
+# Anhang

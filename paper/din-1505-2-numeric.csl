@@ -111,8 +111,8 @@
     <group>
       <text term="retrieved" suffix=" "/>
       <date variable="accessed">
-        <date-part name="year" form="long" suffix="-"/>
-        <date-part name="month" form="numeric-leading-zeros" suffix="-"/>
+        <date-part name="year" form="long"/>
+        <date-part name="month" form="numeric-leading-zeros"/>
         <date-part name="day" form="numeric-leading-zeros"/>
       </date>
       <!--<date variable="accessed" form="numeric" date-parts="year-month-day"/> // dd.mm.yyy -->
@@ -285,6 +285,7 @@
         <else-if type="webpage post post-weblog " match="any">
           <text prefix=" " macro="title" suffix=". " font-style="italic"/>
           <text prefix="URL " variable="URL"/>
+          <text prefix="abgerufen am " variable="date"/>
           <text prefix=". - " macro="access"/>
           <text prefix=". &#8212;&#160;" variable="container-title"/>
           <text prefix=". &#8212;&#160;" variable="note"/>
@@ -315,8 +316,8 @@
         <!-- keiner der oben genannten fälle -->
         <else>
           <group suffix=".">
+            <text macro="editor" suffix=":"/>
             <text prefix=" " macro="title"/>
-            <text prefix=", " macro="editor"/>
             <text prefix=". " macro="recipient-show"/>
           </group>
           <group prefix=" " suffix=".">
@@ -327,7 +328,10 @@
             </group>
             <text prefix=", " macro="pages"/>
           </group>
-          <text prefix="&#10; URL: " variable="URL"/>
+          <group>
+            <text prefix=" URL: " variable="URL"/>
+            <text prefix=" abgerufen am " variable="note"/>
+          </group>
         </else>
       </choose>
     </layout>
