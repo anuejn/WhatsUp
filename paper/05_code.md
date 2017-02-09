@@ -73,12 +73,6 @@ count:
 	cloc --exclude-dir=lib --exclude-lang=XML .
 
 ```
-### README.md
-```
-# Technical setup
-All the things are set-up using docker compose. To start the app type `docker-compose up` in this directory. For more technical information about the architecture, i suggest looking at the `docker-compose.yml` file.
-
-```
 ### data-collectors/main.py
 ```
 import os
@@ -152,12 +146,6 @@ RUN pip install -r requirements.txt
 COPY . /code
 
 CMD ["python", "-u", "main.py"]
-
-```
-### data-collectors/README.md
-```
-# Data collectors
-This directory contains the data collectors. They collect data from different news sites and add it to the DB.
 
 ```
 ### data-collectors/article_structure.json
@@ -464,30 +452,6 @@ def wrap():
 if __name__ == "__main__":
     app.run("0.0.0.0", 3141, debug=True)
 
-```
-### backend/README.md
-```
-# MongoHttp
-The mongoDB HTTP wrapper is writen in python. It allows us to make unauthenticated
-map/reduce requests to a Mongodb via HTTP, which is not possible by default. . It exposes a single simple
-HTTP GET endpoint:
-```
-GET /?map=[mapfunction]&reduce=[reducefunction]
-```
-This endpoint returns the result of the map/reduce request as given by the DB.
-
-## Example
-```
-map:
-function(doc) {
-
-}
-
-reduce:
-function() {
-
-}
-```
 ```
 ### frontend/index.html
 ```

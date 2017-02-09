@@ -4,7 +4,7 @@ import os
 import re
 
 root_dir = "../code"
-ignore_dirs = ["../code/backup/.*", "../code/frontend/lib/.*", ".*.png", ".*idea.*", ".*.svg"]
+ignore_dirs = ["../code/backup/.*", "../code/frontend/lib/.*", ".*.png", ".*idea.*", ".*.svg", ".*.md"]
 heading_style = "### "
 beginning = "## Quellcode\n"
 
