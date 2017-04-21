@@ -31,7 +31,7 @@
                                 .filter(word => stopwords.indexOf(word["_id"].toLowerCase()) < 0)
                                 .filter(word => german_stopwords_case.indexOf(word["_id"]) < 0)
                                 .sort((a,b) => b["value"] - a["value"])
-                                .slice(0, 500)
+                                //.slice(0, 500)
                 ).sort((a,b) => b["value"] - a["value"]);
 
                 var table = "<table style='margin: auto;'>";
