@@ -5,7 +5,7 @@ view: pdf
 print: pdf
 	lpr main.pdf -o outputorder=reverse
 
-pdf: code_format
+pdf:
 	pandoc --smart --toc -N --listings --bibliography=references.bib --csl=din-1505-2-numeric.csl --filter=pandoc-fignos --template=template.tex --latex-engine=xelatex *.md -o main.pdf
 
 tex:
